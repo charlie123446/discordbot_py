@@ -1,7 +1,11 @@
 import discord
 from discord.ext import commands
+import json
 
-bot = commands.Bot(command_prefix='flower_chen_')
+with open('setting.json', 'r', encoding='utf8') as jfile:
+    jdata = json.load(jfile)
+
+bot = commands.Bot(command_prefix=jdata['command_prefix'])
 
 @bot.event
 async def on_ready():
@@ -12,18 +16,17 @@ async def on_ready():
 @bot.event
 async def on_member_join(member):
     print(f'{member} join!')
-    channel = bot.get_channel(675004439697817634)
+    channel = bot.get_channel(int(jdata['test_channel']))
     await channel.send(f'{member} join!')
 
 @bot.event
 async def on_member_remove(member):
     print(f'{member} leave!')
-    channel = bot.get_channel(675004439697817634)
+    channel = bot.get_channel(int(jdata['test_channel']))
     await channel.send(f'{member} leave!')
 
 @bot.command()
 async def ping(ctx):
     await ctx.send(f'{round(bot.latency*1000)}(ms)')
 
-
-bot.run('Njc4MjExNzU0Mzk1Njk3MTc1.XkgQkg.F3nTjRIm_l2Y5RO2AJg8tt22fGs')
+bot.run(jdata['token'])
